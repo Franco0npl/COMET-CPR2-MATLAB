@@ -1,0 +1,15 @@
+# Generated MATLAB results and workspaces
+*.mat
+*.asv
+*.autosave
+*.m~
+*.mlx.autosave
+*.slxc
+*.slx.autosave
+slprj/
+codegen/
+*.fig
+# OS / editor caches
+.DS_Store
+Thumbs.db
+.vscode/

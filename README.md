@@ -57,6 +57,10 @@ disp(A_single); disp(A_dual);
 
 The cyclic effectiveness matrix is locally calculated for the **common** two-input cyclic commands; it is not the full six-actuator/six-wrench Jacobian. The Single case disables upper cyclic actuation while Dual enables both. The thrust/yaw split is calculated separately.
 
+### Archived development figures
+
+`figures/simulazioni/` contains chronological exploratory runs, **not** the final validated baseline. Folders use `01_`–`21_` prefixes to preserve their original order and descriptive suffixes inferred from the plot filenames. Early `baseline_tracking_revision` folders are historical snapshots, not individually validated releases. Main reference plots are the four images directly under `figures/`.
+
 ### Documentation and figures
 
 - [`docs/CPR2_Technical_Report.docx`](docs/CPR2_Technical_Report.docx): methods, calibration logic, results, limitations, critical evaluation and future improvements.
@@ -74,7 +78,7 @@ The cyclic effectiveness matrix is locally calculated for the **common** two-inp
 - The final parameter set is set in `comet_parameters.m`: cyclic effectiveness scale 0.780; servo response time 20 ms; physical feedback delay 2.5 ms; entry ramp 1.30 s; a 60 ms **reporting-only** timestamp lag.
 - The paper does not provide all gains, inertias and aerodynamic constants; unspecified values are estimated/calibrated and are explicitly differentiated from measured values in the report.
 - Nominal allocation uses a rotor-wrench model consistent with the simulated plant. This may underrepresent model uncertainty or fluid-dynamic interactions. Rotor-specific aerodynamic efficacy and a plant-vs-allocator mismatch are identified as **future work**, not silently implemented.
-- **Execution status:** packaged and statically checked; the uploaded code has **not** been executed in MATLAB in this environment. Verify the ten cases in a clean installation before treating the repository as numerically reproduced.
+- **Execution verification (19 November 2026):** the repository was downloaded as a ZIP and `run_COMET_comparison` was executed from the extracted `src/` folder in MATLAB on Windows. All five trajectory cases and both configurations completed (10/10 runs); the script ended with `Comparison completed.`, produced the expected figures and wrote `COMET_comparison_results.mat`. Parameters printed: `K_cyc = 0.780`, servo time constant `20 ms`, physical feedback delay `2.5 ms`, diagnostic measurement lag `60 ms`, entry ramp `1.30 s`. The observed physical position RMSE for `circle_4` was approximately `0.11582 m` (Single) and `0.11532 m` (Dual). This verifies this baseline run, not independent validation of the model against the physical experiment. Optional calibration and flatness scripts were not part of this execution check.
 
 ## Attribution
 
