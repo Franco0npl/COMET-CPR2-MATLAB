@@ -6,8 +6,8 @@ MATLAB study of the nonlinear trajectory-tracking behavior of a coaxial aerial r
 
 ## Start here — reproduce the final baseline results
 
-1. Open MATLAB and set **Current Folder** to the `src/` directory of this repository.
-2. Verify that `comet_parameters.m`, `simulate_COMET.m`, and `run_COMET_comparison.m` are all in `src/` and that no older same-named functions shadow them on the MATLAB path.
+1. Open MATLAB and set **Current Folder** to the `MATLAB_MAIN_FILES/` directory of this repository.
+2. Verify that `comet_parameters.m`, `simulate_COMET.m`, and `run_COMET_comparison.m` are all in `MATLAB_MAIN_FILES/` and that no older same-named functions shadow them on the MATLAB path.
 3. From the MATLAB Command Window run:
 
    ```matlab
@@ -17,17 +17,17 @@ MATLAB study of the nonlinear trajectory-tracking behavior of a coaxial aerial r
    run_COMET_comparison
    ```
 
-4. The runner performs **five reference trajectories × two configurations = ten** closed-loop simulations, prints a summary, Single/Dual advantage, and simulation-vs-paper table, and creates four figures (ten trajectories, tracking, actuator use, experiment comparison). With `save_results = true` it also writes `src/COMET_comparison_results.mat` locally; `.mat` files are intentionally not tracked by Git.
+4. The runner performs **five reference trajectories × two configurations = ten** closed-loop simulations, prints a summary, Single/Dual advantage, and simulation-vs-paper table, and creates four figures (ten trajectories, tracking, actuator use, experiment comparison). With `save_results = true` it also writes `MATLAB_MAIN_FILES/COMET_comparison_results.mat` locally; `.mat` files are intentionally not tracked by Git.
 
-The selected five cases are `circle_3`, `circle_4`, `eight_3p5`, `eight_4` and `eight_5`. For a short live demo, edit `case_ids` at the top of `src/run_COMET_comparison.m` (e.g. `case_ids = ["circle_4", "eight_4"];`). Restore all five cases for the final comparison.
+The selected five cases are `circle_3`, `circle_4`, `eight_3p5`, `eight_4` and `eight_5`. For a short live demo, edit `case_ids` at the top of `MATLAB_MAIN_FILES/run_COMET_comparison.m` (e.g. `case_ids = ["circle_4", "eight_4"];`). Restore all five cases for the final comparison.
 
 ### Main code inventory
 
 | File | Responsibility |
 | --- | --- |
-| [`src/comet_parameters.m`](src/comet_parameters.m) | Builds `P`: reference-frame conventions, estimated/reported physical parameters, rotor-wrench effectiveness, gain matrices, motor/servo limits, Single/Dual cyclic masks, five experimental targets, metric settings. |
-| [`src/simulate_COMET.m`](src/simulate_COMET.m) | Runs one nonlinear 19-component state simulation. Generates a trajectory; computes delayed-state cascaded position/velocity/attitude/rate control; calculates configuration-dependent cyclic allocation; models rotor/environment wrench and actuator dynamics; advances RK4; logs metrics and matrices. |
-| [`src/run_COMET_comparison.m`](src/run_COMET_comparison.m) | Main entry point. Runs ten baseline studies with shared gains, collects physical and timestamp-offset metrics, prints comparisons, generates figures, optionally saves a MAT results structure. |
+| [`MATLAB_MAIN_FILES/comet_parameters.m`](MATLAB_MAIN_FILES/comet_parameters.m) | Builds `P`: reference-frame conventions, estimated/reported physical parameters, rotor-wrench effectiveness, gain matrices, motor/servo limits, Single/Dual cyclic masks, five experimental targets, metric settings. |
+| [`MATLAB_MAIN_FILES/simulate_COMET.m`](MATLAB_MAIN_FILES/simulate_COMET.m) | Runs one nonlinear 19-component state simulation. Generates a trajectory; computes delayed-state cascaded position/velocity/attitude/rate control; calculates configuration-dependent cyclic allocation; models rotor/environment wrench and actuator dynamics; advances RK4; logs metrics and matrices. |
+| [`MATLAB_MAIN_FILES/run_COMET_comparison.m`](MATLAB_MAIN_FILES/run_COMET_comparison.m) | Main entry point. Runs ten baseline studies with shared gains, collects physical and timestamp-offset metrics, prints comparisons, generates figures, optionally saves a MAT results structure. |
 
 ### Control and plant flow
 
@@ -69,8 +69,8 @@ The cyclic effectiveness matrix is locally calculated for the **common** two-inp
 
 ### Optional research material (not needed for baseline)
 
-- [`research/calibration/`](research/calibration/): exploratory parameter sweeps of cyclic effectiveness, entry-ramp settings, feedback delay, drag and **diagnostic** timestamp offsets. These scripts are not required for baseline reproduction and may generate substantial result files. To rerun any such script, put the `src/` directory on the MATLAB path and confirm its own documented parameter assumptions.
-- [`research/flatness/`](research/flatness/): independent experimental hybrid Differential Flatness variant. This is **not** the finalized baseline controller and does not establish flatness of the complete 19-component COMET model. To run the optional extension, add both `src/` and `research/flatness/` to the MATLAB path; run `run_COMET_flatness`. Its experimental reconstruction and validity require separate evaluation.
+- [`research/calibration/`](research/calibration/): exploratory parameter sweeps of cyclic effectiveness, entry-ramp settings, feedback delay, drag and **diagnostic** timestamp offsets. These scripts are not required for baseline reproduction and may generate substantial result files. To rerun any such script, put the `MATLAB_MAIN_FILES/` directory on the MATLAB path and confirm its own documented parameter assumptions.
+- [`research/flatness/`](research/flatness/): independent experimental hybrid Differential Flatness variant. This is **not** the finalized baseline controller and does not establish flatness of the complete 19-component COMET model. To run the optional extension, add both `MATLAB_MAIN_FILES/` and `research/flatness/` to the MATLAB path; run `run_COMET_flatness`. Its experimental reconstruction and validity require separate evaluation.
 
 ### Reproducibility and limitations
 
@@ -78,7 +78,7 @@ The cyclic effectiveness matrix is locally calculated for the **common** two-inp
 - The final parameter set is set in `comet_parameters.m`: cyclic effectiveness scale 0.780; servo response time 20 ms; physical feedback delay 2.5 ms; entry ramp 1.30 s; a 60 ms **reporting-only** timestamp lag.
 - The paper does not provide all gains, inertias and aerodynamic constants; unspecified values are estimated/calibrated and are explicitly differentiated from measured values in the report.
 - Nominal allocation uses a rotor-wrench model consistent with the simulated plant. This may underrepresent model uncertainty or fluid-dynamic interactions. Rotor-specific aerodynamic efficacy and a plant-vs-allocator mismatch are identified as **future work**, not silently implemented.
-- **Execution verification (19 November 2026):** the repository was downloaded as a ZIP and `run_COMET_comparison` was executed from the extracted `src/` folder in MATLAB on Windows. All five trajectory cases and both configurations completed (10/10 runs); the script ended with `Comparison completed.`, produced the expected figures and wrote `COMET_comparison_results.mat`. Parameters printed: `K_cyc = 0.780`, servo time constant `20 ms`, physical feedback delay `2.5 ms`, diagnostic measurement lag `60 ms`, entry ramp `1.30 s`. The observed physical position RMSE for `circle_4` was approximately `0.11582 m` (Single) and `0.11532 m` (Dual). This verifies this baseline run, not independent validation of the model against the physical experiment. Optional calibration and flatness scripts were not part of this execution check.
+- **Execution verification (19 November 2026):** the repository was downloaded as a ZIP and `run_COMET_comparison` was executed from the extracted `MATLAB_MAIN_FILES/` folder in MATLAB on Windows. All five trajectory cases and both configurations completed (10/10 runs); the script ended with `Comparison completed.`, produced the expected figures and wrote `COMET_comparison_results.mat`. Parameters printed: `K_cyc = 0.780`, servo time constant `20 ms`, physical feedback delay `2.5 ms`, diagnostic measurement lag `60 ms`, entry ramp `1.30 s`. The observed physical position RMSE for `circle_4` was approximately `0.11582 m` (Single) and `0.11532 m` (Dual). This verifies this baseline run, not independent validation of the model against the physical experiment. Optional calibration and flatness scripts were not part of this execution check.
 
 ## Attribution
 
